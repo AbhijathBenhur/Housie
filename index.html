@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <title>Tellius Fun Together</title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+<body>
+     <div id="app">
+          <img src="./tellius-logo.png" style="margin: 100px 30px;">
+          <div id="tableContainer">
+     </div>
+</body>
+
+<script>
+     function getRandomInt(min, max) {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+     }
+
+     function isNumberInTable(number, table) {
+          let found = false
+          for (let rowCount = 0; rowCount < table.length; rowCount++) {
+               let row = table[rowCount]
+               for (let colCount = 0; colCount < row.length; colCount++) {
+                    if (row[colCount] == number) {
+                         found = true
+                    }
+               }
+          }
+          return found
+     }
+
+     function getUnusedRandomNumber(table) {
+          let randomNumber = getRandomInt(0, 99);
+          if (isNumberInTable(randomNumber, table)) {
+               return getUnusedRandomNumber(table)
+          } else {
+               return randomNumber;
+          }
+     }
+
+  
+
+
+     var col = 9;
+     var rows = 3;
+
+     var tableData = [];
+     for (let r = 0; r < 4; r++) {
+          var row = [];
+          for (let c = 0; c < 9; c++) {
+               row.push(getUnusedRandomNumber(tableData))
+          }
+          tableData.push(row)
+     }
+
+     console.log(tableData)
+
+     var tablearea = document.getElementById('tableContainer');
+     var table = document.createElement('table');
+     table.setAttribute("id", "timetable");
+     table.classList.add("table");
+     table.classList.add("table-striped");
+
+
+     for (var i = 0; i < tableData.length; i++) {
+          var tr = document.createElement('tr');
+          for (var j = 0; j < tableData[i].length; j++) {
+               var td = document.createElement('td');
+               var text = document.createElement('span')
+               text.innerHTML = tableData[i][j];
+               text.classList.add("numberCellValue");
+               td.appendChild(text);
+               td.classList.add("numberCell");
+               td.setAttribute("id", i+"-"+j);
+               td.addEventListener('click', function (e) {
+                    if (e.target) {
+                         if(e.target.getAttribute("bgcolor") == "#714BFE"){
+                              e.target.removeAttribute("bgcolor")
+                              e.target.setAttribute("color", "black")
+                         }
+                         else{
+                              e.target.setAttribute("bgcolor", "#714BFE")
+                              e.target.setAttribute("color", "#FFFFFF")
+                         }
+                    }
+               });
+               tr.appendChild(td)
+
+          } 
+          table.appendChild(tr);
+     } 
+     tablearea.appendChild(table);
+
+
+
+</script>
+
+<style>
+     #tableContainer{
+          width: 80% !important;
+     }
+     #app{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+     }
+     table {
+          border-collapse: collapse
+     }
+     
+     tr:nth-child(odd) {background-color: #ebe6ff;}
+
+     td {
+          border: 1px solid grey;
+          padding: .2em .8em
+     }
+
+     .numberCellValue{
+          font-size:25px;
+          pointer-events: none
+     }
+    
+
+     .numberCell {
+          text-align: center;
+          cursor: pointer;
+     }
+</style>
+
+</html>
